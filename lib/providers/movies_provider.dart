@@ -1,18 +1,15 @@
-// ignore_for_file: unnecessary_this
-
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:peliculas/models/models.dart';
 
 class MoviesProvider extends ChangeNotifier {
-  String _baseUrl = 'api.themoviedb.org';
-  String _apiKey = '26226bc0d351dd2e356a4f74d1f1d276';
-  String _language = 'es-ES';
+  final String _baseUrl = 'api.themoviedb.org';
+  final String _apiKey = '26226bc0d351dd2e356a4f74d1f1d276';
+  final String _language = 'es-ES';
 
   MoviesProvider() {
     print('Movies provider inicializado');
-    this.getOnDisplayMovies();
+    getOnDisplayMovies();
   }
 
   getOnDisplayMovies() async {
@@ -25,8 +22,8 @@ class MoviesProvider extends ChangeNotifier {
     final response = await http.get(url);
 
     if (response.statusCode != 200) return print('error');
-    final Map<String, dynamic> decodedData = json.decode(response.body);
+    final nowPlayingResponse = NowPlayingResponse.fromJson(response.body);
 
-    print(decodedData['results']);
+    print(nowPlayingResponse.results[0].title);
   }
 }
