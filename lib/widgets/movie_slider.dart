@@ -21,7 +21,7 @@ class MovieSlider extends StatelessWidget {
         children: [
           if (title != null)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.only(left: 20, bottom: 10),
               child: Text(title!,
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold)),
