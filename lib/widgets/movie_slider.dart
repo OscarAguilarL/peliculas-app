@@ -1,15 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:peliculas/models/models.dart';
 
-class MovieSlider extends StatelessWidget {
+class MovieSlider extends StatefulWidget {
   final List<Movie> movies;
   final String? title;
+  final Function onNextPage;
 
   const MovieSlider({
     Key? key,
     this.title,
     required this.movies,
+    required this.onNextPage,
   }) : super(key: key);
+
+  @override
+  State<MovieSlider> createState() => _MovieSliderState();
+}
+
+class _MovieSliderState extends State<MovieSlider> {
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() {
+      final double pixels = scrollController.position.pixels;
+      final double maxScrollExtent = scrollController.position.maxScrollExtent;
+      if (pixels >= maxScrollExtent - 500) {
+        widget.onNextPage();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +45,10 @@ class MovieSlider extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (title != null)
+          if (widget.title != null)
             Padding(
               padding: const EdgeInsets.only(left: 20, bottom: 10),
-              child: Text(title!,
+              child: Text(widget.title!,
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold)),
             ),
@@ -32,9 +58,10 @@ class MovieSlider extends StatelessWidget {
           // Movie Posters
           Expanded(
             child: ListView.builder(
+              controller: scrollController,
               scrollDirection: Axis.horizontal,
-              itemCount: movies.length,
-              itemBuilder: (_, index) => _MoviePoster(movies[index]),
+              itemCount: widget.movies.length,
+              itemBuilder: (_, index) => _MoviePoster(widget.movies[index]),
             ),
           ),
         ],
